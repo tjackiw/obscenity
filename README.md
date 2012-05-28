@@ -1,4 +1,4 @@
-# Obscenity
+# Obscenity [![Build Status](http://travis-ci.org/tjackiw/obscenity.png)](http://travis-ci.org/tjackiw/obscenity)
 
 Obscenity is a profanity filter gem for Ruby/Rubinius, Rails (through ActiveModel), and Rack middleware.
 

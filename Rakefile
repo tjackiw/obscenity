@@ -24,8 +24,8 @@ Jeweler::Tasks.new do |gem|
   gem.email         = "tjackiw@gmail.com"
   gem.homepage      = "http://github.com/tjackiw/obscenity"
   gem.license       = "MIT"
-  gem.summary       = %Q{ Obscenity is a profanity filter gem for Ruby, Rails (through ActiveModel), and Rack middleware }
-  gem.description   = %Q{ Obscenity is a profanity filter gem for Ruby, Rails (through ActiveModel), and Rack middleware }
+  gem.summary       = %Q{ Obscenity is a profanity filter gem for Ruby/Rubinius, Rails (through ActiveModel), and Rack middleware }
+  gem.description   = %Q{ Obscenity is a profanity filter gem for Ruby/Rubinius, Rails (through ActiveModel), and Rack middleware }
   gem.files         = `git ls-files`.split("\n")
   gem.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
   gem.require_paths = ["lib"]

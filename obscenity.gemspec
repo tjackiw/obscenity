@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Thiago Jackiw"]
   s.date = "2012-05-28"
-  s.description = " Obscenity is a profanity filter gem for Ruby, Rails (through ActiveModel), and Rack middleware "
+  s.description = " Obscenity is a profanity filter gem for Ruby/Rubinius, Rails (through ActiveModel), and Rack middleware "
   s.email = "tjackiw@gmail.com"
   s.extra_rdoc_files = [
     "LICENSE.txt",
@@ -47,7 +47,7 @@ Gem::Specification.new do |s|
   s.licenses = ["MIT"]
   s.require_paths = ["lib"]
   s.rubygems_version = "1.8.24"
-  s.summary = "Obscenity is a profanity filter gem for Ruby, Rails (through ActiveModel), and Rack middleware"
+  s.summary = "Obscenity is a profanity filter gem for Ruby/Rubinius, Rails (through ActiveModel), and Rack middleware"
   s.test_files = ["test/helper.rb", "test/static/422.html", "test/test_active_model.rb", "test/test_base.rb", "test/test_config.rb", "test/test_obscenity.rb", "test/test_rack.rb", "test/test_version.rb"]
 
   if s.respond_to? :specification_version then

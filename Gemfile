@@ -7,4 +7,5 @@ group :development do
   gem "jeweler", "~> 1.8.3"
   gem "activemodel", "~> 3.0"
   gem "rack"
+  gem "rake"
 end

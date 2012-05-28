@@ -35,5 +35,6 @@ DEPENDENCIES
   bundler
   jeweler (~> 1.8.3)
   rack
+  rake
   rdoc (~> 3.12)
   shoulda

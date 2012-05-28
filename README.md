@@ -6,19 +6,19 @@ Obscenity is a profanity filter gem for Ruby, Rails (through ActiveModel), and R
 
 Add this line to your application's Gemfile:
 
-    ``` ruby
+    ```ruby
     gem 'obscenity'
     ```
 
 And then execute:
 
-    ``` ruby
+    ```ruby
     bundle install
     ```
 
 Or install it yourself as:
 
-    ``` ruby
+    ```ruby
     gem install obscenity
     ```
 
@@ -56,7 +56,7 @@ The following methods are available to use with Obscenity:
 
 Example:
 
-    ``` ruby
+    ```ruby
     Obscenity.configure do |config|
       config.blacklist   = "path/to/blacklist/file.yml"
       config.whitelist   = ["safe", "word"]
@@ -68,7 +68,7 @@ Example:
 
 `Obscenity.profane?(text)` analyses the content and returns `true` or `false` based on its profanity:
 
-    ``` ruby
+    ```ruby
     Obscenity.profane?("simple text")
     => false
     
@@ -78,7 +78,7 @@ Example:
 
 `Obscenity.sanitize(text)` sanities the content and returns a new sanitized content (if profane) or the original content (if not profane):
 
-    ``` ruby
+    ```ruby
     Obscenity.sanitize("simple text")
     => "simple text"
     
@@ -88,7 +88,7 @@ Example:
     
 `Obscenity.replacement(style).sanitize(text)` allows you to pass the replacement method to be used when sanitizing the given content. Available replacement values are `:default`, `:garbled`, `:stars`, `:vowels`, and a custom string.
 
-    ``` ruby
+    ```ruby
     Obscenity.replacement(:default).sanitize("text with shit")
     => "text with $@!#%"
 
@@ -107,7 +107,7 @@ Example:
 
 `Obscenity.offensive(text)` returns an array of profane words in the given content:
 
-    ``` ruby
+    ```ruby
     Obscenity.offensive("simple text")
     => []
     
@@ -121,13 +121,13 @@ The ActiveModel component provides easy profanity validation for your models.
 
 First, you need to explicitly require the ActiveModel component: 
 
-    ``` ruby
+    ```ruby
     require 'obscenity/active_model'
     ```
 
 Then you can use it in your models as such:
 
-    ``` ruby
+    ```ruby
     # ActiveRecord example
     class Post < ActiveRecord::Base
       
@@ -172,12 +172,12 @@ You can use Obscenity as a Rack middleware to automatically reject requests that
 
 First you need to explicitly require the Rack middleware:
 
-    ``` ruby
+    ```ruby
     require 'obscenity/rack'
     ```
 And to use the middleware, the basic syntax is:
 
-    ``` ruby
+    ```ruby
     use Rack::Obscenity, {} # options Hash
     ```
 
@@ -189,30 +189,30 @@ Any of the following options can be used to reject a request.
 
 `reject: true` : will reject a request if any parameter value contains profanity.
 
-    ``` ruby
+    ```ruby
     use Rack::Obscenity, reject: true
     ```
 `reject: { params: [] }` : will analyze the selected parameters and reject the request if their values contain profanity.
 
-    ``` ruby
+    ```ruby
     use Rack::Obscenity, reject: { params: [:foo, :bar] }
     ```
 
 `reject: { message: 'Custom message' }` : will reject a request and display the custom message if any parameter value contains profanity
 
-    ``` ruby
+    ```ruby
     use Rack::Obscenity, reject: { message: "We don't allow profanity!" }
     ```
 
 `reject: { path: 'path/to/file' }` :  will reject a request and render the custom file if any parameter value contains profanity
 
-    ``` ruby
+    ```ruby
     use Rack::Obscenity, reject: { path: 'public/no_profanity.html' }
     ```
 
 More usage example:
 
-    ``` ruby
+    ```ruby
     # Rejects the request for all params and renders a file
     use Rack::Obscenity, reject: { params: :all, path: 'public/no_profanity.html' }
 
@@ -229,24 +229,24 @@ Any of the following options can be used to sanitize a request.
 
 `sanitize: true` : will sanitize all parameter values if they contain profanity.
 
-    ``` ruby
+    ```ruby
     use Rack::Obscenity, sanitize: true
     ```
 `sanitize: { params: [] }` : will analyze the selected parameters and sanitize them if their values contain profanity.
 
-    ``` ruby
+    ```ruby
     use Rack::Obscenity, sanitize: { params: [:foo, :bar] }
     ```
 
 `sanitize: { replacement: (:default | :garbled | :stars | :vowels | 'custom') }` : will use this replacement method when sanitizing parameter values
 
-    ``` ruby
+    ```ruby
     use Rack::Obscenity, sanitize: { replacement: :vowels }
     ```
 
 More usage example:
 
-    ``` ruby
+    ```ruby
     # Sanitizes all params and replaces their values using :stars
     use Rack::Obscenity, sanitize: { params: :all, replacement: :stars }
 

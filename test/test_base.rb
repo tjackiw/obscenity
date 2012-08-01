@@ -25,7 +25,7 @@ class TestBase < Test::Unit::TestCase
       end
     end
   end
-  
+
   context "#whitelist" do
     context "without custom config" do
       setup { Obscenity::Base.whitelist = :default }
@@ -41,11 +41,11 @@ class TestBase < Test::Unit::TestCase
       end
     end
   end
-  
+
   context "#profane?" do
     context "without whitelist" do
       context "without custom config" do
-        setup { 
+        setup {
           Obscenity::Base.blacklist = :default
           Obscenity::Base.whitelist = :default
         }
@@ -66,7 +66,7 @@ class TestBase < Test::Unit::TestCase
     end
     context "with whitelist" do
       context "without custom blacklist config" do
-        setup { 
+        setup {
           Obscenity::Base.blacklist = :default
           Obscenity::Base.whitelist = ['biatch']
         }
@@ -77,7 +77,7 @@ class TestBase < Test::Unit::TestCase
         end
       end
       context "with custom blacklist/whitelist config" do
-        setup { 
+        setup {
           Obscenity::Base.blacklist = ['ass', 'word']
           Obscenity::Base.whitelist = ['word']
         }
@@ -89,11 +89,11 @@ class TestBase < Test::Unit::TestCase
       end
     end
   end
-  
+
   context "#sanitize" do
     context "without whitelist" do
       context "without custom config" do
-        setup { 
+        setup {
           Obscenity::Base.blacklist = :default
           Obscenity::Base.whitelist = :default
         }
@@ -112,7 +112,7 @@ class TestBase < Test::Unit::TestCase
     end
     context "with whitelist" do
       context "without custom blacklist config" do
-        setup { 
+        setup {
           Obscenity::Base.blacklist = :default
           Obscenity::Base.whitelist = ['biatch']
         }
@@ -122,7 +122,7 @@ class TestBase < Test::Unit::TestCase
         end
       end
       context "with custom blacklist/whitelist config" do
-        setup { 
+        setup {
           Obscenity::Base.blacklist = ['clown', 'biatch']
           Obscenity::Base.whitelist = ['biatch']
         }
@@ -133,11 +133,11 @@ class TestBase < Test::Unit::TestCase
       end
     end
   end
-  
+
   context "#replacement" do
     context "without whitelist" do
       context "without custom config" do
-        setup { 
+        setup {
           Obscenity::Base.blacklist = :default
           Obscenity::Base.whitelist = :default
         }
@@ -145,16 +145,18 @@ class TestBase < Test::Unit::TestCase
           assert_equal "Yo ********, sup", Obscenity::Base.replacement(:stars).sanitize('Yo assclown, sup')
           assert_equal "Yo $@!#%, sup", Obscenity::Base.replacement(:garbled).sanitize('Yo assclown, sup')
           assert_equal "Yo *sscl*wn, sup", Obscenity::Base.replacement(:vowels).sanitize('Yo assclown, sup')
+          assert_equal "Oh, *h*t!", Obscenity::Base.replacement(:nonconsonants).sanitize('Oh, 5hit!')
           assert_equal "Yo [censored], sup", Obscenity::Base.replacement('[censored]').sanitize('Yo assclown, sup')
           assert_equal "Hello World", Obscenity::Base.replacement(:default).sanitize('Hello World')
         end
       end
       context "with custom blacklist config" do
-        setup { Obscenity::Base.blacklist = ['ass', 'word'] }
+        setup { Obscenity::Base.blacklist = ['ass', 'word', 'w0rd'] }
         should "sanitize and return a clean text based on a custom list" do
           assert_equal "Yo ****, sup", Obscenity::Base.replacement(:stars).sanitize('Yo word, sup')
           assert_equal "Yo $@!#%, sup", Obscenity::Base.replacement(:garbled).sanitize('Yo word, sup')
           assert_equal "Yo w*rd, sup", Obscenity::Base.replacement(:vowels).sanitize('Yo word, sup')
+          assert_equal "Yo w*rd, sup", Obscenity::Base.replacement(:nonconsonants).sanitize('Yo w0rd, sup')
           assert_equal "Yo [censored], sup", Obscenity::Base.replacement('[censored]').sanitize('Yo word, sup')
           assert_equal "Hello World", Obscenity::Base.replacement(:default).sanitize('Hello World')
         end
@@ -162,7 +164,7 @@ class TestBase < Test::Unit::TestCase
     end
     context "with whitelist" do
       context "without custom blacklist config" do
-        setup { 
+        setup {
           Obscenity::Base.blacklist = :default
           Obscenity::Base.whitelist = ['biatch']
         }
@@ -170,12 +172,13 @@ class TestBase < Test::Unit::TestCase
           assert_equal "Yo ********, sup", Obscenity::Base.replacement(:stars).sanitize('Yo assclown, sup')
           assert_equal "Yo $@!#%, sup", Obscenity::Base.replacement(:garbled).sanitize('Yo assclown, sup')
           assert_equal "Yo *sscl*wn, sup", Obscenity::Base.replacement(:vowels).sanitize('Yo assclown, sup')
+          assert_equal "What an *r**", Obscenity::Base.replacement(:nonconsonants).sanitize('What an ar5e')
           assert_equal "Yo [censored], sup", Obscenity::Base.replacement('[censored]').sanitize('Yo assclown, sup')
           assert_equal "Yo biatch, sup", Obscenity::Base.replacement(:default).sanitize('Yo biatch, sup')
         end
       end
       context "with custom blacklist/whitelist config" do
-        setup { 
+        setup {
           Obscenity::Base.blacklist = ['clown', 'biatch']
           Obscenity::Base.whitelist = ['biatch']
         }
@@ -183,6 +186,7 @@ class TestBase < Test::Unit::TestCase
           assert_equal "Yo *****, sup", Obscenity::Base.replacement(:stars).sanitize('Yo clown, sup')
           assert_equal "Yo $@!#%, sup", Obscenity::Base.replacement(:garbled).sanitize('Yo clown, sup')
           assert_equal "Yo cl*wn, sup", Obscenity::Base.replacement(:vowels).sanitize('Yo clown, sup')
+          assert_equal "Yo cl*wn, sup", Obscenity::Base.replacement(:nonconsonants).sanitize('Yo clown, sup')
           assert_equal "Yo [censored], sup", Obscenity::Base.replacement('[censored]').sanitize('Yo clown, sup')
           assert_equal "Yo biatch, sup", Obscenity::Base.replacement(:default).sanitize('Yo biatch, sup')
           assert_equal "Yo assclown, sup", Obscenity::Base.replacement(:default).sanitize('Yo assclown, sup')
@@ -190,11 +194,11 @@ class TestBase < Test::Unit::TestCase
       end
     end
   end
-  
+
   context "#offensive" do
     context "without whitelist" do
       context "without custom config" do
-        setup { 
+        setup {
           Obscenity::Base.blacklist = :default
           Obscenity::Base.whitelist = :default
         }
@@ -213,7 +217,7 @@ class TestBase < Test::Unit::TestCase
     end
     context "with whitelist" do
       context "without custom blacklist config" do
-        setup { 
+        setup {
           Obscenity::Base.blacklist = :default
           Obscenity::Base.whitelist = ['biatch']
         }
@@ -223,7 +227,7 @@ class TestBase < Test::Unit::TestCase
         end
       end
       context "with custom blacklist/whitelist config" do
-        setup { 
+        setup {
           Obscenity::Base.blacklist = ['clown', 'biatch']
           Obscenity::Base.whitelist = ['biatch']
         }
@@ -234,20 +238,21 @@ class TestBase < Test::Unit::TestCase
       end
     end
   end
-  
+
   context "#replace" do
     should "replace the given word by the given replacement method" do
       [
-        [:vowels,  {original: "Yo biatch", clean: "Yo b**tch"}],
-        [:stars,   {original: "Yo biatch", clean: "Yo ******"}],
-        [:garbled, {original: "Yo biatch", clean: "Yo $@!#%"}],
-        [:default, {original: "Yo biatch", clean: "Yo $@!#%"}],
-        ["[censored]", {original: "Yo biatch", clean: "Yo [censored]"}],
+        [:vowels,        {original: "Yo biatch", clean: "Yo b**tch"}],
+        [:nonconsonants, {original: "Yo b!tch",  clean: "Yo b!tch"}],
+        [:stars,         {original: "Yo biatch", clean: "Yo ******"}],
+        [:garbled,       {original: "Yo biatch", clean: "Yo $@!#%"}],
+        [:default,       {original: "Yo biatch", clean: "Yo $@!#%"}],
+        ["[censored]",   {original: "Yo biatch", clean: "Yo [censored]"}],
         [nil, {original: "Yo biatch", clean: "Yo $@!#%"}]
       ].each do |replacement_method, content|
         assert_equal content[:clean], Obscenity::Base.replacement(replacement_method).sanitize(content[:original])
       end
     end
   end
-  
+
 end

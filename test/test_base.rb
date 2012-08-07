@@ -242,15 +242,15 @@ class TestBase < Test::Unit::TestCase
   context "#replace" do
     should "replace the given word by the given replacement method" do
       [
-        [:vowels,        {original: "Yo biatch", clean: "Yo b**tch"}],
-        [:nonconsonants, {original: "Yo b!tch",  clean: "Yo b!tch"}],
-        [:stars,         {original: "Yo biatch", clean: "Yo ******"}],
-        [:garbled,       {original: "Yo biatch", clean: "Yo $@!#%"}],
-        [:default,       {original: "Yo biatch", clean: "Yo $@!#%"}],
-        ["[censored]",   {original: "Yo biatch", clean: "Yo [censored]"}],
-        [nil, {original: "Yo biatch", clean: "Yo $@!#%"}]
+        [:vowels,        {original: "Oh 5hit", clean: "Oh 5h*t"}],
+        [:nonconsonants, {original: "Oh 5hit", clean: "Oh *h*t"}],
+        [:stars,         {original: "Oh 5hit", clean: "Oh ****"}],
+        [:garbled,       {original: "Oh 5hit", clean: "Oh $@!#%"}],
+        [:default,       {original: "Oh 5hit", clean: "Oh $@!#%"}],
+        ["[censored]",   {original: "Oh 5hit", clean: "Oh [censored]"}],
+        [nil,            {original: "Oh 5hit", clean: "Oh $@!#%"}]
       ].each do |replacement_method, content|
-        assert_equal content[:clean], Obscenity::Base.replacement(replacement_method).sanitize(content[:original])
+        assert_equal content[:clean], Obscenity::Base.replacement(replacement_method).sanitize(content[:original]), "(replacement should match for #{replacement_method})"
       end
     end
   end

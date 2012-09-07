@@ -34,6 +34,7 @@ Gem::Specification.new do |s|
     "lib/obscenity/error.rb",
     "lib/obscenity/rack.rb",
     "lib/obscenity/version.rb",
+    "lib/obscenity/rspec_matcher.rb",
     "obscenity.gemspec",
     "test/helper.rb",
     "test/static/422.html",

@@ -3,7 +3,7 @@ require 'rack/mock'
 require 'obscenity/rack'
 
 class TestRack < Test::Unit::TestCase
-  
+
   context "Rack::Obscenity" do
     setup do
       @env     = {}
@@ -12,37 +12,37 @@ class TestRack < Test::Unit::TestCase
       @headers = { 'Content-Type' => 'text/plain' }
       @app     = lambda { |env| [@status, @headers, [@body]] }
     end
-    
+
     def mock_env(options = {})
       @env = Rack::MockRequest.env_for('/', options)
     end
-    
+
     def middleware(options = {})
       Rack::Obscenity.new(@app, options)
     end
-    
+
     def get(params = {})
       { 'QUERY_STRING' => Rack::Utils.build_query(params) }
     end
-    
+
     def get_response_params
       Rack::Utils.parse_query(@env['QUERY_STRING'], "&")
     end
-    
+
     def post(params = {})
       { 'rack.input' => StringIO.new(Rack::Utils.build_query(params)) }
     end
-    
+
     def post_response_params
       Rack::Utils.parse_query(@env['rack.input'].read, "&")
     end
-    
+
     def assert_success_response(status, headers, body)
       assert_equal @status, status
       assert_equal @headers, headers
       assert_equal [@body], body
     end
-    
+
     context "default configuration" do
       should "not evaluate the profanity of parameters" do
         app = middleware
@@ -50,7 +50,7 @@ class TestRack < Test::Unit::TestCase
         assert_success_response status, headers, body
       end
     end
-    
+
     context "rejecting requests" do
       should "not reject if parameter values don't contain profanity" do
         app = middleware(reject: true)
@@ -74,7 +74,7 @@ class TestRack < Test::Unit::TestCase
 
       should "reject if given parameter values contain profanity" do
         app = middleware(reject: { params: [:foo] })
-        [ get(foo: 'ass', baz: 'shit'), 
+        [ get(foo: 'ass', baz: 'shit'),
           post(foo: 'ass').merge(get(foo: 'nice', baz: 'shit'))
         ].each do |options|
           status, headers, body = app.call(mock_env(options))
@@ -117,7 +117,7 @@ class TestRack < Test::Unit::TestCase
         assert_equal [''], body
       end
     end
-    
+
     context "sanitizing requests" do
       should "not sanitize if parameter values don't contain profanity" do
         app = middleware(sanitize: true)
@@ -135,7 +135,7 @@ class TestRack < Test::Unit::TestCase
         assert_equal 'bar', request_params['foo']
         assert_equal '$@!#%', request_params['baz']
       end
-      
+
       should "sanitize if POST parameter values contain profanity" do
         app = middleware(sanitize: true)
         status, headers, body = app.call(mock_env(post(foo: 'bar', baz: 'ass')))
@@ -161,7 +161,7 @@ class TestRack < Test::Unit::TestCase
         request_params = get_response_params
         assert_equal '$@!#%', request_params['foo']
       end
-      
+
       should "sanitize the title using the :garbled replacement" do
         app = middleware(sanitize: { replacement: :garbled })
         status, headers, body = app.call(mock_env(get(foo: 'ass')))
@@ -184,6 +184,14 @@ class TestRack < Test::Unit::TestCase
         assert_success_response status, headers, body
         request_params = get_response_params
         assert_equal '*ss', request_params['foo']
+      end
+
+      should "sanitize the title using the :nonconsonants replacement" do
+        app = middleware(sanitize: { replacement: :nonconsonants })
+        status, headers, body = app.call(mock_env(get(foo: '5hit')))
+        assert_success_response status, headers, body
+        request_params = get_response_params
+        assert_equal '*h*t', request_params['foo']
       end
 
       should "sanitize the title using a custom replacement" do

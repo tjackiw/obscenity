@@ -1,4 +1,4 @@
-# Obscenity [![Build Status](http://travis-ci.org/tjackiw/obscenity.png)](http://travis-ci.org/tjackiw/obscenity)
+# Obscenity [![Build Status](https://secure.travis-ci.org/tjackiw/obscenity.png)](http://travis-ci.org/tjackiw/obscenity)
 
 Obscenity is a profanity filter gem for Ruby/Rubinius, Rails (through ActiveModel), and Rack middleware.
 
@@ -52,6 +52,7 @@ The following methods are available to use with Obscenity:
 - :garbled        : Replaces profane words with $@!#%
 - :stars          : Replaces profane words with '*' up to the word's length
 - :vowels         : Replaces the vowels in the profane word with '*'
+- :nonconsonants  : Replaces non consonants with '*'
 - "custom string" : Replaces the profane word with the custom string
 
 Example:
@@ -100,6 +101,9 @@ Obscenity.replacement(:stars).sanitize("text with shit")
 
 Obscenity.replacement(:vowels).sanitize("text with shit")
 => "text with sh*t"
+
+Obscenity.replacement(:nonconsonants).sanitize('Oh 5hit')
+=> "Oh *h*t"
 
 Obscenity.replacement("[censored]").sanitize("text with shit")
 => "text with [censored]"
@@ -258,6 +262,17 @@ use Rack::Obscenity, sanitize: { params: [:foo, :bar], replacement: "[censored]"
 
 # Sanitizes all params and replaces their values using :garbled
 use Rack::Obscenity, sanitize: { replacement: :garbled }
+```
+### Test Helpers
+
+Obscenity currently provides test helpers for RSpec only, but we have plans to add helpers to Shoulda as well.
+
+#### RSpec Matcher
+
+A `be_profane` matcher is available for RSpec. Its usage is very simple:
+
+```ruby
+user.username.should_not be_profane
 ```
 
 ## Contributing to obscenity

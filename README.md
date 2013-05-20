@@ -39,6 +39,8 @@ The following methods are available to use with Obscenity:
 - An array with words
 - A string representing a path to a yml file
 - A Pathname object with a path to a yml file
+- `:default` for using the supplied blacklist.yml (English words)
+- `:international` for the supplied international.yml list (Spanish, German, English, ...)
 
 `config.whitelist` accepts the following values:
 

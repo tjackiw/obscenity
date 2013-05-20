@@ -5,6 +5,7 @@ module Obscenity
     
     DEFAULT_WHITELIST = []
     DEFAULT_BLACKLIST = File.dirname(__FILE__) + "/../../config/blacklist.yml"
+    INTERNATIONAL_BLACKLIST = File.dirname(__FILE__) + "/../../config/international.yml"
     
     def initialize
       yield(self) if block_given?
@@ -20,7 +21,13 @@ module Obscenity
     end
     
     def blacklist=(value)
-      @blacklist = value == :default ? DEFAULT_BLACKLIST : value
+      if value == :default
+        @blacklist = DEFAULT_BLACKLIST
+      elsif value == :international
+        @blacklist = INTERNATIONAL_BLACKLIST
+      else
+        @blacklist = value
+      end
     end
     
     def whitelist
@@ -41,7 +48,7 @@ module Obscenity
       when Array    then !content.empty?       || raise(Obscenity::EmptyContentList.new('Content array is empty.'))
       when String   then File.exists?(content) || raise(Obscenity::UnkownContentFile.new("Content file can't be found."))
       when Pathname then content.exist?        || raise(Obscenity::UnkownContentFile.new("Content file can't be found."))
-      when Symbol   then content == :default   || raise(Obscenity::UnkownContent.new("The only accepted symbol is :default."))
+      when Symbol   then (content == :default || content == :international)   || raise(Obscenity::UnkownContent.new("The only accepted symbol is :default."))
       else
         raise Obscenity::UnkownContent.new("The content can be either an Array, Pathname, or String path to a .yml file.")
       end

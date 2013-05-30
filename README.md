@@ -24,7 +24,7 @@ gem install obscenity
 
 ## Compatibility
 
-Obscenity is compatible with Ruby 1.9.X, Rubinius 1.9, Rails 3.X, and Rack as a middleware. Starting with Rails 3, the profanity validation works with any ORM supported by ActiveModel, e.g: ActiveRecord, MongoMapper, Mongoid, etc. 
+Obscenity is compatible with Ruby 1.9.X, Ruby 2.0.0, Rubinius 1.9, Rails 3.X, and Rack as a middleware. Starting with Rails 3, the profanity validation works with any ORM supported by ActiveModel, e.g: ActiveRecord, MongoMapper, Mongoid, etc. 
 
 ## Using Obscenity
 
@@ -39,6 +39,8 @@ The following methods are available to use with Obscenity:
 - An array with words
 - A string representing a path to a yml file
 - A Pathname object with a path to a yml file
+- `:default` for using the supplied blacklist.yml (English words)
+- `:international` for the supplied international.yml list (Spanish, German, English, ...)
 
 `config.whitelist` accepts the following values:
 

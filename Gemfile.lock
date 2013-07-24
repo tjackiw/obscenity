@@ -1,3 +1,8 @@
+PATH
+  remote: .
+  specs:
+    obscenity (1.0.2)
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -34,6 +39,7 @@ DEPENDENCIES
   activemodel (~> 3.0)
   bundler
   jeweler (~> 1.8.3)
+  obscenity!
   rack
   rake
   rdoc (~> 3.12)

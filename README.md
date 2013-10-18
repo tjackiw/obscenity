@@ -53,6 +53,7 @@ The following methods are available to use with Obscenity:
 - :stars          : Replaces profane words with '*' up to the word's length
 - :vowels         : Replaces the vowels in the profane word with '*'
 - :nonconsonants  : Replaces non consonants with '*'
+- :hollow         : Replaces all but the first and last letter with '*'
 - "custom string" : Replaces the profane word with the custom string
 
 Example:
@@ -87,7 +88,7 @@ Obscenity.sanitize("text with shit")
 => "text with $@!#%"
 ```
     
-`Obscenity.replacement(style).sanitize(text)` allows you to pass the replacement method to be used when sanitizing the given content. Available replacement values are `:default`, `:garbled`, `:stars`, `:vowels`, and a custom string.
+`Obscenity.replacement(style).sanitize(text)` allows you to pass the replacement method to be used when sanitizing the given content. Available replacement values are `:default`, `:garbled`, `:stars`, `:vowels`, `:hollow`, and a custom string.
 
 ```ruby
 Obscenity.replacement(:default).sanitize("text with shit")
@@ -104,6 +105,9 @@ Obscenity.replacement(:vowels).sanitize("text with shit")
 
 Obscenity.replacement(:nonconsonants).sanitize('Oh 5hit')
 => "Oh *h*t"
+
+Obscenity.replacement(:hollow).sanitize('Oh 5hit')
+=> "Oh 5**t
 
 Obscenity.replacement("[censored]").sanitize("text with shit")
 => "text with [censored]"

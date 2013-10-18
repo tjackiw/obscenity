@@ -52,6 +52,7 @@ module Obscenity
       def replace(word)
         content = @scoped_replacement || Obscenity.config.replacement
         case content
+        when :hollow then word[1..word.size-2] = '*' * (word.size-2) if word.size > 2; word
         when :vowels then word.gsub(/[aeiou]/i, '*')
         when :stars  then '*' * word.size
         when :nonconsonants then word.gsub(/[^bcdfghjklmnpqrstvwxyz]/i, '*')

@@ -107,7 +107,7 @@ Obscenity.replacement(:nonconsonants).sanitize('Oh 5hit')
 => "Oh *h*t"
 
 Obscenity.replacement(:hollow).sanitize('Oh 5hit')
-=> "Oh 5**t
+=> "Oh 5**t"
 
 Obscenity.replacement("[censored]").sanitize("text with shit")
 => "text with [censored]"

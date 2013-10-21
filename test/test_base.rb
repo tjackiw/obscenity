@@ -242,7 +242,7 @@ class TestBase < Test::Unit::TestCase
   context "#replace" do
     should "replace the given word by the given replacement method" do
       [
-        [:hollow,        {original: "Oh 5hit", clean: "Oh 5**t"}]
+        [:hollow,        {original: "Oh 5hit", clean: "Oh 5**t"}],
         [:vowels,        {original: "Oh 5hit", clean: "Oh 5h*t"}],
         [:nonconsonants, {original: "Oh 5hit", clean: "Oh *h*t"}],
         [:stars,         {original: "Oh 5hit", clean: "Oh ****"}],

@@ -1,4 +1,5 @@
-require 'helper'
+#require with file.direname allows test to run in RubyMine as well as commandline
+require File.dirname(__FILE__) + '/helper'
 
 class TestBase < Test::Unit::TestCase
 

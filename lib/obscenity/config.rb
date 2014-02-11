@@ -1,10 +1,11 @@
 module Obscenity
   class Config
     
-    attr_accessor :replacement
+    attr_accessor :replacement, :word_size
     
     DEFAULT_WHITELIST = []
     DEFAULT_BLACKLIST = File.dirname(__FILE__) + "/../../config/blacklist.yml"
+    DEFAULT_WORD_SIZE = 3
     
     def initialize
       yield(self) if block_given?
@@ -29,6 +30,10 @@ module Obscenity
     
     def whitelist=(value)
       @whitelist = value == :default ? DEFAULT_WHITELIST : value
+    end
+
+    def word_size
+      @word_size ||= DEFAULT_WORD_SIZE
     end
     
     private

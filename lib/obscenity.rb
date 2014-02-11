@@ -34,6 +34,10 @@ module Obscenity extend self
   def offensive(text)
     Obscenity::Base.offensive(text)
   end
+
+  def word_size(value)
+    Obscenity::Base.word_size(value)
+  end
   
   
 end

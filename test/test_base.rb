@@ -54,6 +54,12 @@ class TestBase < Test::Unit::TestCase
           assert Obscenity::Base.profane?('biatch')
           assert !Obscenity::Base.profane?('hello')
         end
+
+        should "validate the profanity of multiple words based on the default list" do
+          assert Obscenity::Base.profane?('ass fuck')
+          assert Obscenity::Base.profane?('fuck-nuts')
+          assert Obscenity::Base.profane?('fuck_nuts')
+        end
       end
       context "with custom blacklist config" do
         setup { Obscenity::Base.blacklist = ['ass', 'word'] }

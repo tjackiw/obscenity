@@ -15,7 +15,7 @@ class TestBase < Test::Unit::TestCase
       setup { Obscenity::Base.blacklist = :default }
       should "use the default content file when no config is found" do
         assert Obscenity::Base.blacklist.is_a?(Array)
-        assert_equal 565, Obscenity::Base.blacklist.size
+        assert_equal 567, Obscenity::Base.blacklist.size
       end
     end
     context "with custom config" do

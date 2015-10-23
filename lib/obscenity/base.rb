@@ -50,6 +50,7 @@ module Obscenity
       end
 
       def replace(word)
+        word.gsub!('\w*', '')
         content = @scoped_replacement || Obscenity.config.replacement
         case content
         when :vowels then word.gsub(/[aeiou]/i, '*')

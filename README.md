@@ -57,13 +57,17 @@ The following methods are available to use with Obscenity:
 - :nonconsonants  : Replaces non consonants with '*'
 - "custom string" : Replaces the profane word with the custom string
 
+`config.word_size` accepts a numeric value indicating the min size of a word to check in the blacklist or whitelist
+- default if not set in config is 3
+
 Example:
 
 ```ruby
 Obscenity.configure do |config|
   config.blacklist   = "path/to/blacklist/file.yml"
   config.whitelist   = ["safe", "word"]
-  config.replacement = :stars
+  config.replacement = :stars,
+  config.word_size = 2 
 end
 ```
 
@@ -275,6 +279,13 @@ A `be_profane` matcher is available for RSpec. Its usage is very simple:
 
 ```ruby
 user.username.should_not be_profane
+```
+
+#### RubyMine Testing Note
+Require the full path of the helper file if you wish to run in RubyMine. For example:
+
+```ruby
+require File.dirname(__FILE__) + '/helper'
 ```
 
 ## Contributing to obscenity

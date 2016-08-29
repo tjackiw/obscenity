@@ -1,10 +1,11 @@
-require 'helper'
+#require with file.direname allows test to run in RubyMine as well as commandline
+require File.dirname(__FILE__) + '/helper'
 
 class TestBase < Test::Unit::TestCase
 
   context "#respond_to?" do
     should "respond to methods and attributes" do
-      [:blacklist, :whitelist, :profane?, :sanitize, :replacement, :offensive, :replace].each do |field|
+      [:blacklist, :whitelist, :profane?, :sanitize, :replacement, :offensive, :replace, :word_size].each do |field|
         assert Obscenity::Base.respond_to?(field)
       end
     end
@@ -61,6 +62,22 @@ class TestBase < Test::Unit::TestCase
           assert Obscenity::Base.profane?('ass')
           assert Obscenity::Base.profane?('word')
           assert !Obscenity::Base.profane?('biatch')
+        end
+      end
+      context "with 2 letter word" do
+        setup {
+          Obscenity::Base.blacklist = ['ho']
+          Obscenity::Base.whitelist = :default
+          Obscenity::Base.word_size = 2
+        }
+        should "validate the profanity of a 2 letter word based on the custom list" do
+          assert Obscenity::Base.profane?('ho')
+          assert !Obscenity::Base.profane?('yo')
+          assert !Obscenity::Base.profane?('go')
+        end
+        should "2 letter word should not be profane if default word size used" do
+          Obscenity::Base.word_size = Obscenity::Config::DEFAULT_WORD_SIZE
+          assert !Obscenity::Base.profane?('ho')
         end
       end
     end

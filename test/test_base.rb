@@ -255,4 +255,15 @@ class TestBase < Test::Unit::TestCase
     end
   end
 
+  context "edge cases" do
+    should "sanitize words ending with $" do
+      Obscenity::Base.blacklist = ['as$', 'a$s']
+
+      assert_equal 'text with ***', Obscenity.replacement(:stars).sanitize('text with as$')
+      assert_equal 'text with ***', Obscenity.replacement(:stars).sanitize('text with a$s')
+      assert_equal true, Obscenity.profane?('as$')
+      assert_equal true, Obscenity.profane?('a$s')
+    end
+  end
+
 end

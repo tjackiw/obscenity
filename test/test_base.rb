@@ -24,6 +24,12 @@ class TestBase < Test::Unit::TestCase
         assert_equal ['bad', 'word'], Obscenity::Base.blacklist
       end
     end
+    context "with custom Regex config" do
+      setup { Obscenity::Base.blacklist = ['\w*bad\w*', '\w*word\w*'] }
+      should "respect the config options" do
+        assert_equal ['\w*bad\w*', '\w*word\w*'], Obscenity::Base.blacklist
+      end
+    end
   end
 
   context "#whitelist" do
@@ -38,6 +44,12 @@ class TestBase < Test::Unit::TestCase
       setup { Obscenity::Base.whitelist = ['safe', 'word'] }
       should "respect the config options" do
         assert_equal ['safe', 'word'], Obscenity::Base.whitelist
+      end
+    end
+    context "with custom Regex config" do
+      setup { Obscenity::Base.whitelist = ['\w*safe\w*', '\w*word\w*'] }
+      should "respect the config options" do
+        assert_equal ['\w*safe\w*', '\w*word\w*'], Obscenity::Base.whitelist
       end
     end
   end
@@ -57,6 +69,14 @@ class TestBase < Test::Unit::TestCase
       end
       context "with custom blacklist config" do
         setup { Obscenity::Base.blacklist = ['ass', 'word'] }
+        should "validate the profanity of a word based on the custom list" do
+          assert Obscenity::Base.profane?('ass')
+          assert Obscenity::Base.profane?('word')
+          assert !Obscenity::Base.profane?('biatch')
+        end
+      end
+      context "with custom blacklist Regex config" do
+        setup { Obscenity::Base.blacklist = ['\w*ass\w*', '\w*word\w*'] }
         should "validate the profanity of a word based on the custom list" do
           assert Obscenity::Base.profane?('ass')
           assert Obscenity::Base.profane?('word')
@@ -87,6 +107,17 @@ class TestBase < Test::Unit::TestCase
           assert !Obscenity::Base.profane?('biatch')
         end
       end
+      context "with custom blacklist/whitelist Regex config" do
+        setup {
+          Obscenity::Base.blacklist = ['\w*ass\w*', '\w*word\w*']
+          Obscenity::Base.whitelist = ['word']
+        }
+        should "validate the profanity of a word based on the custom list" do
+          assert Obscenity::Base.profane?('ass')
+          assert !Obscenity::Base.profane?('word')
+          assert !Obscenity::Base.profane?('biatch')
+        end
+      end
     end
   end
 
@@ -109,6 +140,13 @@ class TestBase < Test::Unit::TestCase
           assert_equal "Hello world", Obscenity::Base.sanitize('Hello world')
         end
       end
+      context "with custom blacklist Regex config" do
+        setup { Obscenity::Base.blacklist = ['\w*ass\w*', '\w*word\w*'] }
+        should "sanitize and return a clean text based on a custom list" do
+          assert_equal "Yo $@!#%, sup", Obscenity::Base.sanitize('Yo word, sup')
+          assert_equal "Hello world", Obscenity::Base.sanitize('Hello world')
+        end
+      end
     end
     context "with whitelist" do
       context "without custom blacklist config" do
@@ -118,7 +156,8 @@ class TestBase < Test::Unit::TestCase
         }
         should "sanitize and return a clean text based on the default blacklist and custom whitelist" do
           assert_equal "Yo $@!#%, sup", Obscenity::Base.sanitize('Yo assclown, sup')
-          assert_equal "Yo biatch, sup", Obscenity::Base.sanitize('Yo biatch, sup')
+          assert_equal "Yo $@!#%, sup", Obscenity::Base.sanitize('Yo biatch, sup')
+          assert_equal "biatch", Obscenity::Base.sanitize('biatch')
         end
       end
       context "with custom blacklist/whitelist config" do
@@ -128,7 +167,19 @@ class TestBase < Test::Unit::TestCase
         }
         should "validate the profanity of a word based on the custom list" do
           assert_equal "Yo $@!#%, sup", Obscenity::Base.sanitize('Yo clown, sup')
-          assert_equal "Yo biatch, sup", Obscenity::Base.sanitize('Yo biatch, sup')
+          assert_equal "Yo $@!#%, sup", Obscenity::Base.sanitize('Yo biatch, sup')
+          assert_equal "biatch", Obscenity::Base.sanitize('biatch')
+        end
+      end
+      context "with custom blacklist/whitelist Regex config" do
+        setup {
+          Obscenity::Base.blacklist = ['\w*clown\w*', '\w*biatch\w*']
+          Obscenity::Base.whitelist = ['biatch']
+        }
+        should "validate the profanity of a word based on the custom list" do
+          assert_equal "Yo $@!#%, sup", Obscenity::Base.sanitize('Yo clown, sup')
+          assert_equal "Yo $@!#%, sup", Obscenity::Base.sanitize('Yo biatch, sup')
+          assert_equal "biatch", Obscenity::Base.sanitize('biatch')
         end
       end
     end
@@ -161,6 +212,17 @@ class TestBase < Test::Unit::TestCase
           assert_equal "Hello World", Obscenity::Base.replacement(:default).sanitize('Hello World')
         end
       end
+      context "with custom blacklist Regex config" do
+        setup { Obscenity::Base.blacklist = ['\w*ass\w*', '\w*word\w*', '\w*w0rd\w*'] }
+        should "sanitize and return a clean text based on a custom list" do
+          assert_equal "Yo ****, sup", Obscenity::Base.replacement(:stars).sanitize('Yo word, sup')
+          assert_equal "Yo $@!#%, sup", Obscenity::Base.replacement(:garbled).sanitize('Yo word, sup')
+          assert_equal "Yo w*rd, sup", Obscenity::Base.replacement(:vowels).sanitize('Yo word, sup')
+          assert_equal "Yo w*rd, sup", Obscenity::Base.replacement(:nonconsonants).sanitize('Yo w0rd, sup')
+          assert_equal "Yo [censored], sup", Obscenity::Base.replacement('[censored]').sanitize('Yo word, sup')
+          assert_equal "Hello World", Obscenity::Base.replacement(:default).sanitize('Hello World')
+        end
+      end
     end
     context "with whitelist" do
       context "without custom blacklist config" do
@@ -174,7 +236,8 @@ class TestBase < Test::Unit::TestCase
           assert_equal "Yo *sscl*wn, sup", Obscenity::Base.replacement(:vowels).sanitize('Yo assclown, sup')
           assert_equal "What an *r**", Obscenity::Base.replacement(:nonconsonants).sanitize('What an ar5e')
           assert_equal "Yo [censored], sup", Obscenity::Base.replacement('[censored]').sanitize('Yo assclown, sup')
-          assert_equal "Yo biatch, sup", Obscenity::Base.replacement(:default).sanitize('Yo biatch, sup')
+          assert_equal "Yo $@!#%, sup", Obscenity::Base.replacement(:default).sanitize('Yo biatch, sup')
+          assert_equal "biatch", Obscenity::Base.replacement(:default).sanitize('biatch')
         end
       end
       context "with custom blacklist/whitelist config" do
@@ -188,7 +251,24 @@ class TestBase < Test::Unit::TestCase
           assert_equal "Yo cl*wn, sup", Obscenity::Base.replacement(:vowels).sanitize('Yo clown, sup')
           assert_equal "Yo cl*wn, sup", Obscenity::Base.replacement(:nonconsonants).sanitize('Yo clown, sup')
           assert_equal "Yo [censored], sup", Obscenity::Base.replacement('[censored]').sanitize('Yo clown, sup')
-          assert_equal "Yo biatch, sup", Obscenity::Base.replacement(:default).sanitize('Yo biatch, sup')
+          assert_equal "Yo $@!#%, sup", Obscenity::Base.replacement(:default).sanitize('Yo biatch, sup')
+          assert_equal "biatch", Obscenity::Base.replacement(:default).sanitize('biatch')
+          assert_equal "Yo assclown, sup", Obscenity::Base.replacement(:default).sanitize('Yo assclown, sup')
+        end
+      end
+      context "with custom blacklist/whitelist Regex config" do
+        setup {
+          Obscenity::Base.blacklist = ['\w*clown\w*', '\w*biatch\w*']
+          Obscenity::Base.whitelist = ['biatch']
+        }
+        should "validate the profanity of a word based on the custom list" do
+          assert_equal "Yo *****, sup", Obscenity::Base.replacement(:stars).sanitize('Yo clown, sup')
+          assert_equal "Yo $@!#%, sup", Obscenity::Base.replacement(:garbled).sanitize('Yo clown, sup')
+          assert_equal "Yo cl*wn, sup", Obscenity::Base.replacement(:vowels).sanitize('Yo clown, sup')
+          assert_equal "Yo cl*wn, sup", Obscenity::Base.replacement(:nonconsonants).sanitize('Yo clown, sup')
+          assert_equal "Yo [censored], sup", Obscenity::Base.replacement('[censored]').sanitize('Yo clown, sup')
+          assert_equal "Yo $@!#%, sup", Obscenity::Base.replacement(:default).sanitize('Yo biatch, sup')
+          assert_equal "biatch", Obscenity::Base.replacement(:default).sanitize('biatch')
           assert_equal "Yo assclown, sup", Obscenity::Base.replacement(:default).sanitize('Yo assclown, sup')
         end
       end
@@ -214,6 +294,13 @@ class TestBase < Test::Unit::TestCase
           assert_equal [], Obscenity::Base.offensive('Hello world')
         end
       end
+      context "with custom blacklist Regex config" do
+        setup { Obscenity::Base.blacklist = ['\w*yo\w*', '\w*word\w*'] }
+        should "return an array with the offensive words based on a custom list" do
+          assert_equal ['\w*yo\w*', '\w*word\w*'], Obscenity::Base.offensive('Yo word, sup')
+          assert_equal [], Obscenity::Base.offensive('Hello world')
+        end
+      end
     end
     context "with whitelist" do
       context "without custom blacklist config" do
@@ -223,7 +310,8 @@ class TestBase < Test::Unit::TestCase
         }
         should "return an array with the offensive words based on the default blacklist and custom whitelist" do
           assert_equal ['assclown'], Obscenity::Base.offensive('Yo assclown, sup')
-          assert_equal [], Obscenity::Base.offensive('Yo biatch, sup')
+          assert_equal ['biatch'], Obscenity::Base.offensive('Yo biatch, sup')
+          assert_equal [], Obscenity::Base.offensive('biatch')
         end
       end
       context "with custom blacklist/whitelist config" do
@@ -233,7 +321,19 @@ class TestBase < Test::Unit::TestCase
         }
         should "return an array with the offensive words based on the custom list" do
           assert_equal ['clown'], Obscenity::Base.offensive('Yo clown, sup')
-          assert_equal [], Obscenity::Base.offensive('Yo biatch, sup')
+          assert_equal ['biatch'], Obscenity::Base.offensive('Yo biatch, sup')
+          assert_equal [], Obscenity::Base.offensive('biatch')
+        end
+      end
+      context "with custom blacklist/whitelist Regex config" do
+        setup {
+          Obscenity::Base.blacklist = ['\w*clown\w*', '\w*biatch\w*']
+          Obscenity::Base.whitelist = ['biatch']
+        }
+        should "return an array with the offensive words based on the custom list" do
+          assert_equal ['\w*clown\w*'], Obscenity::Base.offensive('Yo clown, sup')
+          assert_equal ['\w*biatch\w*'], Obscenity::Base.offensive('Yo biatch, sup')
+          assert_equal [], Obscenity::Base.offensive('biatch')
         end
       end
     end

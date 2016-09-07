@@ -21,7 +21,7 @@ module Obscenity
       def profane?(text)
         return(false) unless text.to_s.size >= 3
         blacklist.each do |foul|
-          return(true) if text =~ /\b#{foul}\b/i && !whitelist.include?(foul)
+          return(true) if text =~ /\b#{foul}\b/i && !whitelist.include?(text)
         end
         false
       end
@@ -29,7 +29,7 @@ module Obscenity
       def sanitize(text)
         return(text) unless text.to_s.size >= 3
         blacklist.each do |foul|
-          text.gsub!(/\b#{foul}\b/i, replace(foul)) unless whitelist.include?(foul)
+          text.gsub!(/\b#{foul}\b/i, replace(foul)) unless whitelist.include?(text)
         end
         @scoped_replacement = nil
         text
@@ -44,12 +44,13 @@ module Obscenity
         words = []
         return(words) unless text.to_s.size >= 3
         blacklist.each do |foul|
-          words << foul if text =~ /\b#{foul}\b/i && !whitelist.include?(foul)
+          words << foul if text =~ /\b#{foul}\b/i && !whitelist.include?(text)
         end
         words.uniq
       end
 
       def replace(word)
+        word.gsub!('\w*', '')
         content = @scoped_replacement || Obscenity.config.replacement
         case content
         when :vowels then word.gsub(/[aeiou]/i, '*')

@@ -62,5 +62,61 @@ class TestConfig < Test::Unit::TestCase
       end
     end
   end
+
+  should "change blacklist via Obscenity.configure block" do
+    Obscenity.configure do |config|
+      config.blacklist = ['fuck']
+      config.whitelist = nil
+    end
+
+    assert_equal true, Obscenity.profane?('fuck')
+    assert_equal false, Obscenity.profane?('shit')
+
+    Obscenity.configure do |config|
+      config.blacklist = ['shit']
+    end
+
+    assert_equal false, Obscenity.profane?('fuck')
+    assert_equal true, Obscenity.profane?('shit')
+  end
+
+  should "change blacklist via Obscenity.config" do
+    Obscenity.config.blacklist = ['fuck']
+    Obscenity.config.whitelist = nil
+
+    assert_equal true, Obscenity.profane?('fuck')
+    assert_equal false, Obscenity.profane?('shit')
+
+    Obscenity.config.blacklist = ['shit']
+
+    assert_equal false, Obscenity.profane?('fuck')
+    assert_equal true, Obscenity.profane?('shit')
+  end
+
+  should "change whitelist via Obscenity.configure block" do
+    Obscenity.configure do |config|
+      config.blacklist = ['fuck']
+      config.whitelist = nil
+    end
+
+    assert_equal true, Obscenity.profane?('fuck')
+
+    Obscenity.configure do |config|
+      config.whitelist = ['fuck']
+    end
+
+    assert_equal false, Obscenity.profane?('fuck')
+  end
+
+  should "change whitelist via Obscenity.config" do
+    Obscenity.config.blacklist = ['fuck']
+    Obscenity.config.whitelist = nil
+
+    assert_equal true, Obscenity.profane?('fuck')
+
+    Obscenity.config.whitelist = ['fuck']
+
+    assert_equal false, Obscenity.profane?('fuck')
+  end
   
 end

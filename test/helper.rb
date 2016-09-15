@@ -20,7 +20,7 @@ require 'obscenity/active_model'
 module Dummy
   class BaseModel
     include ActiveModel::Validations
-  
+
     attr_accessor :title
 
     def initialize(attr_names)

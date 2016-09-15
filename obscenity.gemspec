@@ -60,7 +60,7 @@ Gem::Specification.new do |s|
       s.add_development_dependency(%q<rdoc>, ["~> 3.12"])
       s.add_development_dependency(%q<bundler>, [">= 0"])
       s.add_development_dependency(%q<jeweler>, ["~> 1.8.3"])
-      s.add_development_dependency(%q<activemodel>, ["~> 3.0"])
+      s.add_development_dependency(%q<activemodel>, [">= 3.0"])
       s.add_development_dependency(%q<rack>, [">= 0"])
       s.add_development_dependency(%q<rake>, [">= 0"])
     else
@@ -68,7 +68,7 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<rdoc>, ["~> 3.12"])
       s.add_dependency(%q<bundler>, [">= 0"])
       s.add_dependency(%q<jeweler>, ["~> 1.8.3"])
-      s.add_dependency(%q<activemodel>, ["~> 3.0"])
+      s.add_dependency(%q<activemodel>, [">= 3.0"])
       s.add_dependency(%q<rack>, [">= 0"])
       s.add_dependency(%q<rake>, [">= 0"])
     end
@@ -77,7 +77,7 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<rdoc>, ["~> 3.12"])
     s.add_dependency(%q<bundler>, [">= 0"])
     s.add_dependency(%q<jeweler>, ["~> 1.8.3"])
-    s.add_dependency(%q<activemodel>, ["~> 3.0"])
+    s.add_dependency(%q<activemodel>, [">= 3.0"])
     s.add_dependency(%q<rack>, [">= 0"])
     s.add_dependency(%q<rake>, [">= 0"])
   end

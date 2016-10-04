@@ -21,7 +21,7 @@ module Obscenity
       def profane?(text)
         return(false) unless text.to_s.size >= 3
         blacklist.each do |foul|
-          return(true) if text =~ /\b#{foul}\b/i && !whitelist.include?(foul)
+          return(true) if text =~ /(_|\b)#{foul}(_|\b)/i && !whitelist.include?(foul)
         end
         false
       end

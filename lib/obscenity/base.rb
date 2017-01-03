@@ -1,3 +1,5 @@
+require 'yaml'
+
 module Obscenity
   class Base
     class << self

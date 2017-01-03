@@ -3,6 +3,35 @@ require 'rack/mock'
 require 'obscenity/rack'
 
 class TestRack < Test::Unit::TestCase
+  def mock_env(options = {})
+    @env = Rack::MockRequest.env_for('/', options)
+  end
+
+  def middleware(options = {})
+    Rack::Obscenity.new(@app, options)
+  end
+
+  def get(params = {})
+    { 'QUERY_STRING' => Rack::Utils.build_query(params) }
+  end
+
+  def get_response_params
+    Rack::Utils.parse_query(@env['QUERY_STRING'], "&")
+  end
+
+  def post(params = {})
+    { 'rack.input' => StringIO.new(Rack::Utils.build_query(params)) }
+  end
+
+  def post_response_params
+    Rack::Utils.parse_query(@env['rack.input'].read, "&")
+  end
+
+  def assert_success_response(status, headers, body)
+    assert_equal @status, status
+    assert_equal @headers, headers
+    assert_equal [@body], body
+  end
 
   context "Rack::Obscenity" do
     setup do
@@ -11,36 +40,6 @@ class TestRack < Test::Unit::TestCase
       @status  = 200
       @headers = { 'Content-Type' => 'text/plain' }
       @app     = lambda { |env| [@status, @headers, [@body]] }
-    end
-
-    def mock_env(options = {})
-      @env = Rack::MockRequest.env_for('/', options)
-    end
-
-    def middleware(options = {})
-      Rack::Obscenity.new(@app, options)
-    end
-
-    def get(params = {})
-      { 'QUERY_STRING' => Rack::Utils.build_query(params) }
-    end
-
-    def get_response_params
-      Rack::Utils.parse_query(@env['QUERY_STRING'], "&")
-    end
-
-    def post(params = {})
-      { 'rack.input' => StringIO.new(Rack::Utils.build_query(params)) }
-    end
-
-    def post_response_params
-      Rack::Utils.parse_query(@env['rack.input'].read, "&")
-    end
-
-    def assert_success_response(status, headers, body)
-      assert_equal @status, status
-      assert_equal @headers, headers
-      assert_equal [@body], body
     end
 
     context "default configuration" do

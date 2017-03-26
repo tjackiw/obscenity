@@ -64,7 +64,7 @@ module Obscenity
       def set_list_content(list)
         case list
         when Array then list
-        when String, Pathname then YAML.load_file( list.to_s )
+        when String, Pathname then Psych.load_file( list.to_s )
         else []
         end
       end

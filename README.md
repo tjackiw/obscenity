@@ -1,6 +1,8 @@
-# NOTE: This project is no longer maintened.
-
 # Obscenity [![Build Status](https://secure.travis-ci.org/tjackiw/obscenity.png)](http://travis-ci.org/tjackiw/obscenity)
+
+## NOTE: [tjackiw/obscenity](https://github.com/tjackiw/obscenity) is no longer maintened.
+
+This is a fork that restores the gem with some updated language and newer dependencies.
 
 Obscenity is a profanity filter gem for Ruby/Rubinius, Rails (through ActiveModel), and Rack middleware.
 

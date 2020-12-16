@@ -11,18 +11,18 @@ class TestConfig < Test::Unit::TestCase
       end
     end
   end
-  
+
   should "properly set the config parameters" do
     blocklist   = ['ass', 'shit', 'penis']
     allowlist   = ['penis']
     replacement = :stars
-    
+
     config = Obscenity::Config.new do |config|
       config.blocklist   = blocklist
       config.allowlist   = allowlist
       config.replacement = replacement
     end
-    
+
     assert_equal blocklist, config.blocklist
     assert_equal allowlist, config.allowlist
     assert_equal replacement, config.replacement
@@ -32,7 +32,7 @@ class TestConfig < Test::Unit::TestCase
     config = Obscenity::Config.new
     assert_equal [], config.allowlist
     assert_equal :garbled, config.replacement
-    assert_match /config\/blocklist.yml/, config.blocklist
+    assert_match(/config\/blocklist.yml/, config.blocklist)
   end
 
   should "return default values when default values are set" do
@@ -44,15 +44,15 @@ class TestConfig < Test::Unit::TestCase
     assert_equal :default, config.replacement
     assert_match /config\/blocklist.yml/, config.blocklist
   end
-  
+
   should "properly validate the config options" do
     [:blocklist, :allowlist].each do |field|
       exceptions = [
-        [Obscenity::UnkownContent, {}], 
-        [Obscenity::UnkownContent, ":unkown"], 
+        [Obscenity::UnknownContent, {}], 
+        [Obscenity::UnknownContent, ":unknown"], 
         [Obscenity::EmptyContentList, []], 
-        [Obscenity::UnkownContentFile, "'path/to/file'"], 
-        [Obscenity::UnkownContentFile, Pathname.new("'path/to/file'")]
+        [Obscenity::UnknownContentFile, "'path/to/file'"], 
+        [Obscenity::UnknownContentFile, Pathname.new("'path/to/file'")]
       ].each do |klass, value|
         assert_raise(klass){
           Obscenity::Config.new do |config|
@@ -62,5 +62,5 @@ class TestConfig < Test::Unit::TestCase
       end
     end
   end
-  
+
 end

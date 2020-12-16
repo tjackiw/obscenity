@@ -36,13 +36,13 @@ The following methods are available to use with Obscenity:
 
 `Obscenity.configure(&block)` allows you to set custom global configuration options. Available options are:
 
-`config.blacklist` accepts the following values:
+`config.blocklist` accepts the following values:
 
 - An array with words
 - A string representing a path to a yml file
 - A Pathname object with a path to a yml file
 
-`config.whitelist` accepts the following values:
+`config.allowlist` accepts the following values:
 
 - An array with words
 - A string representing a path to a yml file
@@ -61,8 +61,8 @@ Example:
 
 ```ruby
 Obscenity.configure do |config|
-  config.blacklist   = "path/to/blacklist/file.yml"
-  config.whitelist   = ["safe", "word"]
+  config.blocklist   = "path/to/blocklist/file.yml"
+  config.allowlist   = ["safe", "word"]
   config.replacement = :stars
 end
 ```

@@ -2,34 +2,34 @@ module Obscenity
   class Base
     class << self
 
-      def blacklist
-        @blacklist ||= set_list_content(Obscenity.config.blacklist)
+      def blocklist
+        @blocklist ||= set_list_content(Obscenity.config.blocklist)
       end
 
-      def blacklist=(value)
-        @blacklist = value == :default ? set_list_content(Obscenity::Config.new.blacklist) : value
+      def blocklist=(value)
+        @blocklist = value == :default ? set_list_content(Obscenity::Config.new.blocklist) : value
       end
 
-      def whitelist
-        @whitelist ||= set_list_content(Obscenity.config.whitelist)
+      def allowlist
+        @allowlist ||= set_list_content(Obscenity.config.allowlist)
       end
 
-      def whitelist=(value)
-        @whitelist = value == :default ? set_list_content(Obscenity::Config.new.whitelist) : value
+      def allowlist=(value)
+        @allowlist = value == :default ? set_list_content(Obscenity::Config.new.allowlist) : value
       end
 
       def profane?(text)
         return(false) unless text.to_s.size >= 3
-        blacklist.each do |foul|
-          return(true) if text =~ /\b#{foul}\b/i && !whitelist.include?(foul)
+        blocklist.each do |foul|
+          return(true) if text =~ /\b#{foul}\b/i && !allowlist.include?(foul)
         end
         false
       end
 
       def sanitize(text)
         return(text) unless text.to_s.size >= 3
-        blacklist.each do |foul|
-          text.gsub!(/\b#{foul}\b/i, replace(foul)) unless whitelist.include?(foul)
+        blocklist.each do |foul|
+          text.gsub!(/\b#{foul}\b/i, replace(foul)) unless allowlist.include?(foul)
         end
         @scoped_replacement = nil
         text
@@ -43,8 +43,8 @@ module Obscenity
       def offensive(text)
         words = []
         return(words) unless text.to_s.size >= 3
-        blacklist.each do |foul|
-          words << foul if text =~ /\b#{foul}\b/i && !whitelist.include?(foul)
+        blocklist.each do |foul|
+          words << foul if text =~ /\b#{foul}\b/i && !allowlist.include?(foul)
         end
         words.uniq
       end

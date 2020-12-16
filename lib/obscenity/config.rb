@@ -3,8 +3,8 @@ module Obscenity
     
     attr_accessor :replacement
     
-    DEFAULT_WHITELIST = []
-    DEFAULT_BLACKLIST = File.dirname(__FILE__) + "/../../config/blacklist.yml"
+    DEFAULT_ALLOWLIST = []
+    DEFAULT_BLOCKLIST = File.dirname(__FILE__) + "/../../config/blocklist.yml"
     
     def initialize
       yield(self) if block_given?
@@ -15,25 +15,25 @@ module Obscenity
       @replacement ||= :garbled
     end
     
-    def blacklist
-      @blacklist ||= DEFAULT_BLACKLIST
+    def blocklist
+      @blocklist ||= DEFAULT_BLOCKLIST
     end
     
-    def blacklist=(value)
-      @blacklist = value == :default ? DEFAULT_BLACKLIST : value
+    def blocklist=(value)
+      @blocklist = value == :default ? DEFAULT_BLOCKLIST : value
     end
     
     def whitelist
-      @whitelist ||= DEFAULT_WHITELIST
+      @whitelist ||= DEFAULT_ALLOWLIST
     end
     
     def whitelist=(value)
-      @whitelist = value == :default ? DEFAULT_WHITELIST : value
+      @whitelist = value == :default ? DEFAULT_ALLOWLIST : value
     end
     
     private
     def validate_config_options
-      [@blacklist, @whitelist].each{ |content| validate_list_content(content) if content }
+      [@blocklist, @whitelist].each{ |content| validate_list_content(content) if content }
     end
     
     def validate_list_content(content)

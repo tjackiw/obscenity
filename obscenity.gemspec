@@ -25,7 +25,7 @@ Gem::Specification.new do |s|
     "LICENSE.txt",
     "README.md",
     "Rakefile",
-    "config/blacklist.yml",
+    "config/blocklist.yml",
     "config/international.yml",
     "lib/obscenity.rb",
     "lib/obscenity/active_model.rb",

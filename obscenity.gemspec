@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = Gem::Requirement.new(">= 0".freeze) if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib".freeze]
   s.authors = ["Thiago Jackiw".freeze]
-  s.date = "2020-12-16"
+  s.date = "2021-01-15"
   s.description = " Obscenity is a profanity filter gem for Ruby/Rubinius, Rails (through ActiveModel), and Rack middleware ".freeze
   s.email = "tjackiw@gmail.com".freeze
   s.extra_rdoc_files = [

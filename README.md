@@ -1,6 +1,8 @@
-# NOTE: This project is no longer maintened.
-
 # Obscenity [![Build Status](https://secure.travis-ci.org/tjackiw/obscenity.png)](http://travis-ci.org/tjackiw/obscenity)
+
+## NOTE: [tjackiw/obscenity](https://github.com/tjackiw/obscenity) is no longer maintened.
+
+This is a fork that restores the gem with some updated language and newer dependencies.
 
 Obscenity is a profanity filter gem for Ruby/Rubinius, Rails (through ActiveModel), and Rack middleware.
 
@@ -36,13 +38,13 @@ The following methods are available to use with Obscenity:
 
 `Obscenity.configure(&block)` allows you to set custom global configuration options. Available options are:
 
-`config.blacklist` accepts the following values:
+`config.blocklist` accepts the following values:
 
 - An array with words
 - A string representing a path to a yml file
 - A Pathname object with a path to a yml file
 
-`config.whitelist` accepts the following values:
+`config.allowlist` accepts the following values:
 
 - An array with words
 - A string representing a path to a yml file
@@ -61,8 +63,8 @@ Example:
 
 ```ruby
 Obscenity.configure do |config|
-  config.blacklist   = "path/to/blacklist/file.yml"
-  config.whitelist   = ["safe", "word"]
+  config.blocklist   = "path/to/blocklist/file.yml"
+  config.allowlist   = ["safe", "word"]
   config.replacement = :stars
 end
 ```

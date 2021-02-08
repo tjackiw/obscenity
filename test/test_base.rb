@@ -4,50 +4,50 @@ class TestBase < Test::Unit::TestCase
 
   context "#respond_to?" do
     should "respond to methods and attributes" do
-      [:blacklist, :whitelist, :profane?, :sanitize, :replacement, :offensive, :replace].each do |field|
+      [:blocklist, :allowlist, :profane?, :sanitize, :replacement, :offensive, :replace].each do |field|
         assert Obscenity::Base.respond_to?(field)
       end
     end
   end
 
-  context "#blacklist" do
+  context "#blocklist" do
     context "without custom config" do
-      setup { Obscenity::Base.blacklist = :default }
+      setup { Obscenity::Base.blocklist = :default }
       should "use the default content file when no config is found" do
-        assert Obscenity::Base.blacklist.is_a?(Array)
-        assert_equal 565, Obscenity::Base.blacklist.size
+        assert Obscenity::Base.blocklist.is_a?(Array)
+        assert_equal 565, Obscenity::Base.blocklist.size
       end
     end
     context "with custom config" do
-      setup { Obscenity::Base.blacklist = ['bad', 'word'] }
+      setup { Obscenity::Base.blocklist = ['bad', 'word'] }
       should "respect the config options" do
-        assert_equal ['bad', 'word'], Obscenity::Base.blacklist
+        assert_equal ['bad', 'word'], Obscenity::Base.blocklist
       end
     end
   end
 
-  context "#whitelist" do
+  context "#allowlist" do
     context "without custom config" do
-      setup { Obscenity::Base.whitelist = :default }
+      setup { Obscenity::Base.allowlist = :default }
       should "use the default content file when no config is found" do
-        assert Obscenity::Base.whitelist.is_a?(Array)
-        assert Obscenity::Base.whitelist.empty?
+        assert Obscenity::Base.allowlist.is_a?(Array)
+        assert Obscenity::Base.allowlist.empty?
       end
     end
     context "with custom config" do
-      setup { Obscenity::Base.whitelist = ['safe', 'word'] }
+      setup { Obscenity::Base.allowlist = ['safe', 'word'] }
       should "respect the config options" do
-        assert_equal ['safe', 'word'], Obscenity::Base.whitelist
+        assert_equal ['safe', 'word'], Obscenity::Base.allowlist
       end
     end
   end
 
   context "#profane?" do
-    context "without whitelist" do
+    context "without allowlist" do
       context "without custom config" do
         setup {
-          Obscenity::Base.blacklist = :default
-          Obscenity::Base.whitelist = :default
+          Obscenity::Base.blocklist = :default
+          Obscenity::Base.allowlist = :default
         }
         should "validate the profanity of a word based on the default list" do
           assert Obscenity::Base.profane?('ass')
@@ -55,8 +55,8 @@ class TestBase < Test::Unit::TestCase
           assert !Obscenity::Base.profane?('hello')
         end
       end
-      context "with custom blacklist config" do
-        setup { Obscenity::Base.blacklist = ['ass', 'word'] }
+      context "with custom blocklist config" do
+        setup { Obscenity::Base.blocklist = ['ass', 'word'] }
         should "validate the profanity of a word based on the custom list" do
           assert Obscenity::Base.profane?('ass')
           assert Obscenity::Base.profane?('word')
@@ -64,11 +64,11 @@ class TestBase < Test::Unit::TestCase
         end
       end
     end
-    context "with whitelist" do
-      context "without custom blacklist config" do
+    context "with allowlist" do
+      context "without custom blocklist config" do
         setup {
-          Obscenity::Base.blacklist = :default
-          Obscenity::Base.whitelist = ['biatch']
+          Obscenity::Base.blocklist = :default
+          Obscenity::Base.allowlist = ['biatch']
         }
         should "validate the profanity of a word based on the default list" do
           assert Obscenity::Base.profane?('ass')
@@ -76,10 +76,10 @@ class TestBase < Test::Unit::TestCase
           assert !Obscenity::Base.profane?('hello')
         end
       end
-      context "with custom blacklist/whitelist config" do
+      context "with custom blocklist/allowlist config" do
         setup {
-          Obscenity::Base.blacklist = ['ass', 'word']
-          Obscenity::Base.whitelist = ['word']
+          Obscenity::Base.blocklist = ['ass', 'word']
+          Obscenity::Base.allowlist = ['word']
         }
         should "validate the profanity of a word based on the custom list" do
           assert Obscenity::Base.profane?('ass')
@@ -91,40 +91,40 @@ class TestBase < Test::Unit::TestCase
   end
 
   context "#sanitize" do
-    context "without whitelist" do
+    context "without allowlist" do
       context "without custom config" do
         setup {
-          Obscenity::Base.blacklist = :default
-          Obscenity::Base.whitelist = :default
+          Obscenity::Base.blocklist = :default
+          Obscenity::Base.allowlist = :default
         }
         should "sanitize and return a clean text based on the default list" do
           assert_equal "Yo $@!#%, sup", Obscenity::Base.sanitize('Yo assclown, sup')
           assert_equal "Hello world", Obscenity::Base.sanitize('Hello world')
         end
       end
-      context "with custom blacklist config" do
-        setup { Obscenity::Base.blacklist = ['ass', 'word'] }
+      context "with custom blocklist config" do
+        setup { Obscenity::Base.blocklist = ['ass', 'word'] }
         should "sanitize and return a clean text based on a custom list" do
           assert_equal "Yo $@!#%, sup", Obscenity::Base.sanitize('Yo word, sup')
           assert_equal "Hello world", Obscenity::Base.sanitize('Hello world')
         end
       end
     end
-    context "with whitelist" do
-      context "without custom blacklist config" do
+    context "with allowlist" do
+      context "without custom blocklist config" do
         setup {
-          Obscenity::Base.blacklist = :default
-          Obscenity::Base.whitelist = ['biatch']
+          Obscenity::Base.blocklist = :default
+          Obscenity::Base.allowlist = ['biatch']
         }
-        should "sanitize and return a clean text based on the default blacklist and custom whitelist" do
+        should "sanitize and return a clean text based on the default blocklist and custom allowlist" do
           assert_equal "Yo $@!#%, sup", Obscenity::Base.sanitize('Yo assclown, sup')
           assert_equal "Yo biatch, sup", Obscenity::Base.sanitize('Yo biatch, sup')
         end
       end
-      context "with custom blacklist/whitelist config" do
+      context "with custom blocklist/allowlist config" do
         setup {
-          Obscenity::Base.blacklist = ['clown', 'biatch']
-          Obscenity::Base.whitelist = ['biatch']
+          Obscenity::Base.blocklist = ['clown', 'biatch']
+          Obscenity::Base.allowlist = ['biatch']
         }
         should "validate the profanity of a word based on the custom list" do
           assert_equal "Yo $@!#%, sup", Obscenity::Base.sanitize('Yo clown, sup')
@@ -135,11 +135,11 @@ class TestBase < Test::Unit::TestCase
   end
 
   context "#replacement" do
-    context "without whitelist" do
+    context "without allowlist" do
       context "without custom config" do
         setup {
-          Obscenity::Base.blacklist = :default
-          Obscenity::Base.whitelist = :default
+          Obscenity::Base.blocklist = :default
+          Obscenity::Base.allowlist = :default
         }
         should "sanitize and return a clean text based on the default list" do
           assert_equal "Yo ********, sup", Obscenity::Base.replacement(:stars).sanitize('Yo assclown, sup')
@@ -150,8 +150,8 @@ class TestBase < Test::Unit::TestCase
           assert_equal "Hello World", Obscenity::Base.replacement(:default).sanitize('Hello World')
         end
       end
-      context "with custom blacklist config" do
-        setup { Obscenity::Base.blacklist = ['ass', 'word', 'w0rd'] }
+      context "with custom blocklist config" do
+        setup { Obscenity::Base.blocklist = ['ass', 'word', 'w0rd'] }
         should "sanitize and return a clean text based on a custom list" do
           assert_equal "Yo ****, sup", Obscenity::Base.replacement(:stars).sanitize('Yo word, sup')
           assert_equal "Yo $@!#%, sup", Obscenity::Base.replacement(:garbled).sanitize('Yo word, sup')
@@ -162,13 +162,13 @@ class TestBase < Test::Unit::TestCase
         end
       end
     end
-    context "with whitelist" do
-      context "without custom blacklist config" do
+    context "with allowlist" do
+      context "without custom blocklist config" do
         setup {
-          Obscenity::Base.blacklist = :default
-          Obscenity::Base.whitelist = ['biatch']
+          Obscenity::Base.blocklist = :default
+          Obscenity::Base.allowlist = ['biatch']
         }
-        should "sanitize and return a clean text based on the default blacklist and custom whitelist" do
+        should "sanitize and return a clean text based on the default blocklist and custom allowlist" do
           assert_equal "Yo ********, sup", Obscenity::Base.replacement(:stars).sanitize('Yo assclown, sup')
           assert_equal "Yo $@!#%, sup", Obscenity::Base.replacement(:garbled).sanitize('Yo assclown, sup')
           assert_equal "Yo *sscl*wn, sup", Obscenity::Base.replacement(:vowels).sanitize('Yo assclown, sup')
@@ -177,10 +177,10 @@ class TestBase < Test::Unit::TestCase
           assert_equal "Yo biatch, sup", Obscenity::Base.replacement(:default).sanitize('Yo biatch, sup')
         end
       end
-      context "with custom blacklist/whitelist config" do
+      context "with custom blocklist/allowlist config" do
         setup {
-          Obscenity::Base.blacklist = ['clown', 'biatch']
-          Obscenity::Base.whitelist = ['biatch']
+          Obscenity::Base.blocklist = ['clown', 'biatch']
+          Obscenity::Base.allowlist = ['biatch']
         }
         should "validate the profanity of a word based on the custom list" do
           assert_equal "Yo *****, sup", Obscenity::Base.replacement(:stars).sanitize('Yo clown, sup')
@@ -196,40 +196,40 @@ class TestBase < Test::Unit::TestCase
   end
 
   context "#offensive" do
-    context "without whitelist" do
+    context "without allowlist" do
       context "without custom config" do
         setup {
-          Obscenity::Base.blacklist = :default
-          Obscenity::Base.whitelist = :default
+          Obscenity::Base.blocklist = :default
+          Obscenity::Base.allowlist = :default
         }
         should "return an array with the offensive words based on the default list" do
           assert_equal ['assclown'], Obscenity::Base.offensive('Yo assclown, sup')
           assert_equal [], Obscenity::Base.offensive('Hello world')
         end
       end
-      context "with custom blacklist config" do
-        setup { Obscenity::Base.blacklist = ['yo', 'word'] }
+      context "with custom blocklist config" do
+        setup { Obscenity::Base.blocklist = ['yo', 'word'] }
         should "return an array with the offensive words based on a custom list" do
           assert_equal ['yo', 'word'], Obscenity::Base.offensive('Yo word, sup')
           assert_equal [], Obscenity::Base.offensive('Hello world')
         end
       end
     end
-    context "with whitelist" do
-      context "without custom blacklist config" do
+    context "with allowlist" do
+      context "without custom blocklist config" do
         setup {
-          Obscenity::Base.blacklist = :default
-          Obscenity::Base.whitelist = ['biatch']
+          Obscenity::Base.blocklist = :default
+          Obscenity::Base.allowlist = ['biatch']
         }
-        should "return an array with the offensive words based on the default blacklist and custom whitelist" do
+        should "return an array with the offensive words based on the default blocklist and custom allowlist" do
           assert_equal ['assclown'], Obscenity::Base.offensive('Yo assclown, sup')
           assert_equal [], Obscenity::Base.offensive('Yo biatch, sup')
         end
       end
-      context "with custom blacklist/whitelist config" do
+      context "with custom blocklist/allowlist config" do
         setup {
-          Obscenity::Base.blacklist = ['clown', 'biatch']
-          Obscenity::Base.whitelist = ['biatch']
+          Obscenity::Base.blocklist = ['clown', 'biatch']
+          Obscenity::Base.allowlist = ['biatch']
         }
         should "return an array with the offensive words based on the custom list" do
           assert_equal ['clown'], Obscenity::Base.offensive('Yo clown, sup')

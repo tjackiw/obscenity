@@ -15,7 +15,7 @@ class TestObscenity < Test::Unit::TestCase
     should "accept a configuration block " do
       assert_nothing_raised{
         Obscenity.configure do |config|
-          config.blacklist   = :default
+          config.blocklist   = :default
           config.replacement = :garbled
         end
       }
